@@ -1,0 +1,13 @@
+{
+    "apps": [{
+            "name": "chat",
+            "script": "./server.js",
+            "max_memory_restart": "2048M",
+            "error_file": "./logs/pm2_err.log",
+            "out_file": "./logs/pm2_out.log",
+            "log_file": "./logs/pm2_log.log",
+            "merge_logs": true,
+            "log_date_format": "YYYY-MM-DD HH:mm:ss:SSS Z"
+        }
+    ]
+}
