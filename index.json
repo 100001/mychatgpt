@@ -7,7 +7,8 @@
             "out_file": "./logs/pm2_out.log",
             "log_file": "./logs/pm2_log.log",
             "merge_logs": true,
-            "log_date_format": "YYYY-MM-DD HH:mm:ss:SSS Z"
+            "log_date_format": "YYYY-MM-DD HH:mm:ss:SSS Z",
+            "port": 3000
         }
     ]
 }

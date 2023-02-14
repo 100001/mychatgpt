@@ -17,19 +17,17 @@ app.get('/completion', async (req, res) => {
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Connection', 'keep-alive');
-    // res.flushHeaders(); // flush the headers to establish SSE with client
-    // if(!req.body.prompt){
+
     if(!req.query.prompt){
         res.sendStatus(500);
         return;
     }
     const completion = await openai.createCompletion({
-        model: "text-davinci-003",
+        model: req.query.model || "text-davinci-003",
         prompt: req.query.prompt,
         max_tokens: 2048,
-        temperature: 0.6,
-        stream: true,
-        n: 10
+        temperature: Number(req.query.temperature) || 0.6,
+        stream: true
     }, { responseType: 'stream' });
 
     completion.data.on('data', data => {
@@ -47,8 +45,6 @@ app.get('/completion', async (req, res) => {
             res.write(`data: ${parsed.choices[0].text}\n\n`)
         }
     });
-        // console.log("response:",resp.data)
-        // res.send(resp.data.choices[0].text)
 });
 
-app.listen(3000);
+app.listen(process.env.port || 3000);
