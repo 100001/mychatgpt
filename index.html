@@ -43,7 +43,7 @@
     <input class="border" id="temperature" type="number" value="0.6" min="0" max="1" placeholder="temperature" style="width:90px" step="0.1" alt="Temperature"/>
     <div class="border" id="prompt" contenteditable="true" data-placeholder="请在这里输入您的问题"></div>
     <button id="submit">提问</button>
-    <button id="reset">清空</button>
+    <button id="reset">重置</button>
   </div>
   <script>
     let submit = document.getElementById("submit")
@@ -67,20 +67,20 @@
                 prompt.appendChild(document.createElement("br"))
                 prompt.appendChild(document.createElement("br"))
                 prompt.appendChild(document.createElement("br"))
-                submit.innerText="继续提问";
-                submit.disabled= false;
+                submit.innerText="继续提问"
+                submit.disabled= false
                 source.close()
             } else {
                 submit.innerText="持续输出..."
-                answer.innerText += event.data;
+                answer.innerText += event.data
             }
         };
     }, false)
     document.getElementById("reset").addEventListener('click', function (params) {
         prompt.innerText=''
-        submit.innerText="提问";
+        submit.disabled= false
+        submit.innerText="提问"
     }, false)
-    
   </script>
 </body>
 </html>
