@@ -58,7 +58,7 @@
         prompt.appendChild(document.createElement("br"))
         prompt.appendChild(document.createElement("br"))
         let answer = document.createElement('span')
-        answer.style="background-color:#d2f7f2;"
+        answer.style="background-color:rgb(222, 248, 242);"
         prompt.appendChild(answer)
         let source = new EventSource("/completion?prompt="+prompt.innerText+"&model="+document.getElementById("model").value+"&temperature="+document.getElementById("temperature").value);
         source.onmessage = function(event) {
