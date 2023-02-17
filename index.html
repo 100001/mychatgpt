@@ -42,13 +42,14 @@
     </select>
     <input class="border" id="temperature" type="number" value="0.6" min="0" max="1" placeholder="temperature" style="width:90px" step="0.1" alt="Temperature"/>
     <div class="border" id="prompt" contenteditable="true" data-placeholder="请在这里输入您的问题"></div>
-    <button id="submit">提问</button>
-    <button id="reset">重置</button>
+    <button id="submit">提问（Shift+Enter）</button>
+    <button id="reset">重置（Shift+Del）</button>
   </div>
   <script>
     let submit = document.getElementById("submit")
     let prompt = document.getElementById("prompt")
-    submit.addEventListener('click', function (params) {
+    let source
+    function getAnswer() {
         if(prompt.innerText.trim()===''){
             alert("请输入问题")
             return;
@@ -60,27 +61,60 @@
         let answer = document.createElement('span')
         answer.style="background-color:rgb(222, 248, 242);"
         prompt.appendChild(answer)
-        let source = new EventSource("/completion?prompt="+prompt.innerText+"&model="+document.getElementById("model").value+"&temperature="+document.getElementById("temperature").value);
+        source = new EventSource("/completion?prompt="+prompt.innerText.trim()+"&model="+document.getElementById("model").value+"&temperature="+document.getElementById("temperature").value);
         source.onmessage = function(event) {
             console.log("event:", event)
             if (event.data === '[DONE]') {
                 prompt.appendChild(document.createElement("br"))
                 prompt.appendChild(document.createElement("br"))
                 prompt.appendChild(document.createElement("br"))
-                submit.innerText="继续提问"
+                submit.innerText="继续提问（Shift+Enter）"
                 submit.disabled= false
                 source.close()
+                placeCaretAtEnd(prompt)
             } else {
                 submit.innerText="持续输出..."
                 answer.innerText += event.data
             }
         };
-    }, false)
-    document.getElementById("reset").addEventListener('click', function (params) {
+    }
+    function reset() {
+        source && source.close && source.close()
         prompt.innerText=''
         submit.disabled= false
-        submit.innerText="提问"
-    }, false)
+        submit.innerText="提问（Shift+Enter）"
+    }
+    submit.addEventListener('click', getAnswer, false)
+    document.getElementById("reset").addEventListener('click', reset, false)
+    document.addEventListener('keydown', (e) => {
+        //13->enter
+        if (e.shiftKey && e.keyCode === 13) {
+            getAnswer()
+            e.preventDefault()
+            e.stopPropagation()
+        }else if(e.shiftKey && e.keyCode === 8){//8->Del
+            reset()
+            e.preventDefault()
+            e.stopPropagation()
+        }
+    })
+    function placeCaretAtEnd(el) {
+        el.focus();
+        if (typeof window.getSelection != "undefined"
+                && typeof document.createRange != "undefined") {
+            var range = document.createRange();
+            range.selectNodeContents(el);
+            range.collapse(false);
+            var sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+        } else if (typeof document.body.createTextRange != "undefined") {
+            var textRange = document.body.createTextRange();
+            textRange.moveToElementText(el);
+            textRange.collapse(false);
+            textRange.select();
+        }
+    }
   </script>
 </body>
 </html>
