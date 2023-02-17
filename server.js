@@ -2,7 +2,7 @@ const fs = require('fs');
 const express = require('express')
 const app = express()
 const { Configuration, OpenAIApi } = require("openai")
-const key = fs.readFileSync('./.env').toString()
+const key = fs.readFileSync('./.env').toString().trim()
 const configuration = new Configuration({
   apiKey: key,
 });
