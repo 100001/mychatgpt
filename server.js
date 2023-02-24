@@ -24,7 +24,7 @@ app.get('/completion', async (req, res) => {
     }
     const completion = await openai.createCompletion({
         model: req.query.model || "text-davinci-003",
-        prompt: req.query.prompt,
+        prompt: req.query.prompt+"<|endoftext|>",
         max_tokens: 2048,
         temperature: Number(req.query.temperature) || 0.6,
         stream: true
